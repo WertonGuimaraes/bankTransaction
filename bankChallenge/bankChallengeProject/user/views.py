@@ -1,3 +1,4 @@
+import pytz
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -5,7 +6,7 @@ from rest_framework import generics
 from user.serializers import UserSerializer, OperationSerializer
 from user.models import User, Operation
 from util.transaction import Transaction
-from util.validator import validate_user, validate_value
+from util.validator import validate_user, validate_value, validate_date
 from datetime import datetime
 
 
@@ -24,19 +25,20 @@ class ExtractView(generics.ListAPIView):
     serializer_class = OperationSerializer
 
     def get_queryset(self):
-        # date example: 2021-03-25T03:47:10.309474Z
         user_id = self.kwargs['user_id'] if 'user_id' in self.kwargs else -1
-        transaction_type = self.request.query_params.get('transactionType', 'debit,credit').split(',')
-        start_date = self.request.query_params.get('startDate', datetime.min)
-        end_date = self.request.query_params.get('endDate', datetime.now())
+        transaction_type = self.request.query_params.get('transaction_type', 'debit,credit').split(',')
+        start_date = self.request.query_params.get('start_date', datetime.min)
+        end_date = self.request.query_params.get('end_date', datetime.now(tz=pytz.UTC))
 
         validate_user(user_id)
+        validate_date(start_date)
+        transaction_type = [_type.lower() for _type in transaction_type]
 
-        return Operation.objects.filter(user=user_id, transactionType__in=transaction_type,
+        return Operation.objects.filter(user=user_id, transaction_type__in=transaction_type,
                                         created_at__range=(start_date, end_date))
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    http_method_names = ['post', 'get']
+    http_method_names = ['post']

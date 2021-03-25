@@ -30,6 +30,13 @@ class UserNotFound(APIException):
         self.status_code = status.HTTP_404_NOT_FOUND
 
 
+class InvalidDateError(APIException):
+    def __init__(self):
+        detail = "The date is invalid."
+        super(InvalidDateError, self).__init__(detail)
+        self.status_code = status.HTTP_400_BAD_REQUEST
+
+
 
 
 

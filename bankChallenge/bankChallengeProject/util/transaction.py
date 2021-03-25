@@ -15,10 +15,10 @@ class Transaction:
         if new_balance < 0:
             raise BalanceError()
 
-        operation = Operation(currentBalance=new_balance,
-                              oldBalance=self.user.balance,
+        operation = Operation(current_balance=new_balance,
+                              old_balance=self.user.balance,
                               difference=value,
-                              transactionType=transaction_type)
+                              transaction_type=transaction_type)
         operation.user = self.user
         operation.save()
         return operation
@@ -26,6 +26,6 @@ class Transaction:
     def make_transaction(self, value):
         if value != 0:
             operation_result = self._register_operation(value)
-            self.user.balance = operation_result.currentBalance
+            self.user.balance = operation_result.current_balance
             self.user.save()
         return self.user

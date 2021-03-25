@@ -1,5 +1,6 @@
+from datetime import datetime
 from user.models import User
-from util.exceptions import TransactionBodyError, TransactionTypeError, UserNotFound
+from util.exceptions import TransactionBodyError, TransactionTypeError, UserNotFound, InvalidDateError
 
 
 def validate_user(user_id):
@@ -16,3 +17,11 @@ def validate_value(request):
         except ValueError:
             raise TransactionTypeError()
     raise TransactionBodyError()
+
+
+def validate_date(date):
+    try:
+        if type(date) == str:
+            datetime.fromisoformat(date.replace('Z', '+00:00'))
+    except ValueError:
+        raise InvalidDateError()

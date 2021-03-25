@@ -11,4 +11,4 @@ class UserSerializer(serializers.ModelSerializer):
 class OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
-        fields = ['currentBalance', 'oldBalance', 'difference', 'created_at']
+        fields = ['current_balance', 'old_balance', 'difference', 'created_at']
