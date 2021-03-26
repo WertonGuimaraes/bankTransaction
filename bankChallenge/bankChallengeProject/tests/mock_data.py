@@ -4,17 +4,16 @@ from datetime import datetime
 class JsonObjects(object):
 
     @staticmethod
-    def user(username, balance=0):
-        return {'username': username, 'balance': balance}
+    def user(username):
+        return {'username': username}
 
     @staticmethod
-    def transaction(user, description, current_balance=100, old_balance=150, created_at=datetime.now()):
+    def transaction(user, description, value):
         return {
             'user': user,
             'description': description,
-            'current_balance': current_balance,
-            'old_balance': old_balance,
-            'difference': current_balance-old_balance,
-            'transaction_type': 'debit' if current_balance > old_balance else 'credit',
-            'created_at': created_at
+            'current_balance': user.balance + value,
+            'old_balance': user.balance,
+            'value': value,
+            'transaction_type': 'debit' if value < 0 else 'credit'
         }

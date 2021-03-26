@@ -6,17 +6,19 @@ from rest_framework import generics
 from user.serializers import UserSerializer, OperationSerializer
 from user.models import User, Operation
 from util.transaction import Transaction
-from util.validator import validate_user, validate_value, validate_date
+from util.validator import validate_user, validate_value, validate_date, validate_required_fields
 from datetime import datetime
 
 
 class OperationView(APIView):
     def post(self, request, user_id):
+        # the validator was created. But, we can check the fields using serializer `.is_valid`
         user = validate_user(user_id)
         value = validate_value(request)
+        description = validate_required_fields(request, 'description')
 
         user_transaction = Transaction(user)
-        updated_user_after_transaction = user_transaction.make_transaction(value)
+        updated_user_after_transaction = user_transaction.make_transaction(value, description)
         updated_user_after_transaction = UserSerializer(updated_user_after_transaction)
         return Response(updated_user_after_transaction.data)
 

@@ -13,13 +13,13 @@ class ExtractRequestTest(APITestCase):
     def setUpClass(cls):
         super(ExtractRequestTest, cls).setUpClass()
 
-        user_data = JsonObjects.user('tom', 100)
+        user_data = JsonObjects.user('tom')
         cls.user = User.objects.create(**user_data)
         cls.user.save()
 
-        transaction_data_1 = JsonObjects.transaction(cls.user, 'Buy a book', 100, 70)
-        transaction_data_2 = JsonObjects.transaction(cls.user, 'Payment receive', 70, 570)
-        transaction_data_3 = JsonObjects.transaction(cls.user, 'Buy some snacks', 570, 530)
+        transaction_data_1 = JsonObjects.transaction(cls.user, 'Buy a book', -30)
+        transaction_data_2 = JsonObjects.transaction(cls.user, 'Payment receive', 500)
+        transaction_data_3 = JsonObjects.transaction(cls.user, 'Buy some snacks', -40)
         with patch('django.utils.timezone.now') as mock_now:
             mock_now.return_value = datetime(2021, 3, 10, tzinfo=pytz.UTC)
             cls.transaction_1 = Operation.objects.create(**transaction_data_1)

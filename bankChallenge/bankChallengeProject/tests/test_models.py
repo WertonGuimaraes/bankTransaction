@@ -22,7 +22,7 @@ class ModelOperationTest(TestCase):
 
     def test__create_transaction(self):
         # Arrange
-        transaction_data = JsonObjects.transaction(self.user, 'Buy a book')
+        transaction_data = JsonObjects.transaction(self.user, 'Buy a book', -10)
         # Act
         transaction_created = Operation.objects.create(**transaction_data)
         # Assert

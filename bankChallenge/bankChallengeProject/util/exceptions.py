@@ -10,8 +10,8 @@ class BalanceError(APIException):
 
 
 class TransactionBodyError(APIException):
-    def __init__(self):
-        detail = "value is required field."
+    def __init__(self, field):
+        detail = "%s is required field." % field
         super(TransactionBodyError, self).__init__(detail)
         self.status_code = status.HTTP_400_BAD_REQUEST
 

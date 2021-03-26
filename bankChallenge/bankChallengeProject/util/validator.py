@@ -11,12 +11,18 @@ def validate_user(user_id):
 
 
 def validate_value(request):
-    if 'value' in request.data.keys():
-        try:
-            return float(request.data['value'])
-        except ValueError:
-            raise TransactionTypeError()
-    raise TransactionBodyError()
+    validate_required_fields(request, 'value')
+    try:
+        return float(request.data['value'])
+    except ValueError:
+        raise TransactionTypeError()
+
+
+def validate_required_fields(request, field):
+    description = request.data[field] if field in request.data else None
+    if description is None:
+        raise TransactionBodyError(field)
+    return description
 
 
 def validate_date(date):
