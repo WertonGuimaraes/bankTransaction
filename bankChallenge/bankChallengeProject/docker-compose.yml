@@ -3,11 +3,19 @@ version: '3.8'
 services:
   web:
     build: .
+    image: wertonguimaraes/bank_challenge
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
       - 8000:8000
+    depends_on:
+      - migration
+  migration:
+    image: wertonguimaraes/bank_challenge
+    command: python manage.py migrate --noinput
+    volumes:
+      - .:/code
 volumes:
     esdata1:
       driver: local
